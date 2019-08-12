@@ -18,7 +18,7 @@ class Native
         {
             return false;
         }
-        $return = self::shortUrl();
+        $return = self::shortUrl($config, $result['code_url']);
         return $return;
     }
 

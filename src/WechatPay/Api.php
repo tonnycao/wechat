@@ -17,8 +17,9 @@ class Api
         $data['time_expire'] = date('YmdHis',time()+ 600);
         $data['spbill_create_ip'] = Util::getClientIp();
         $data['nonce_str'] = Util::getNonceStr();
-        $data['sign'] = Util::makeSign($config['key'], $data);
         $data['sign_type'] = 'MD5';
+        $data['sign'] = Util::makeSign($config['key'], $data);
+
         $xml = Util::toXml($data);
         $response = self::postXmlCurl($xml, $url,false, $timeout);
         if(!$response)
@@ -37,8 +38,9 @@ class Api
             'nonce_str'=>Util::getNonceStr(),
             'out_trade_no'=>$out_trade_no
         ];
-        $params['sign'] = Util::makeSign($config['key'],$params);
         $params['sign_type'] = 'MD5';
+        $params['sign'] = Util::makeSign($config['key'],$params);
+
         $xml = Util::toXml($params);
         $response = self::postXmlCurl($xml, $url, false);
 
@@ -49,6 +51,26 @@ class Api
         return Util::fromXml($response);
     }
 
+    public static function shorturl($config, $long_url)
+    {
+        $url = 'https://api.mch.weixin.qq.com/tools/shorturl';
+        $data = [
+            'appid'=>$config['appid'],
+            'mch_id'=>$config['mch_id'],
+            'nonce_str'=>Util::getNonceStr(),
+            'long_url'=>$long_url,
+            'sign_type'=>'MD5'
+        ];
+
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml, $url, false);
+
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
     private static function postXmlCurl($xml, $url, $useCert = false, $second = 30)
     {
         $ch = curl_init();
