@@ -1,0 +1,30 @@
+{
+    "name": "inesadt/wechat_pay",
+    "description": "inesadt wechat pay package",
+    "type": "library",
+    "require": {
+		"php": ">=7.2.0",
+		"monolog/monolog" : "1.24.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "caojian",
+            "email": "647812411@qq.com"
+        }
+    ],
+	"autoload": {
+        "psr-4": {
+            "Inesadt\\WechatPay\\": "src/WechatPay/"
+        }
+    },
+    "files": [
+        "src/WechatPay/phpqrcode.php"
+    ],
+	"repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
+}
