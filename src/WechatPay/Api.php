@@ -161,7 +161,7 @@ class Api
     protected static function logger($level, $data)
     {
         $log = new Logger('wechat-pay');
-        $root_path = dirname(__DIR__);
+        $root_path = dirname(dirname(__DIR__));
         $log_path = $root_path.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'wechat-pay.log';
         $log->pushHandler(new StreamHandler($log_path, Logger::DEBUG));
         $msg = $data;
