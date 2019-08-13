@@ -3,11 +3,13 @@
 
 namespace Inesadt\WechatPay;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class Api
 {
 
-    public static function unifiedorder($config, $param, $timeout=10)
+    public static function unifiedorder($config, $param)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $data = $param;
@@ -21,7 +23,7 @@ class Api
         $data['sign'] = Util::makeSign($config['key'], $data);
 
         $xml = Util::toXml($data);
-        $response = self::postXmlCurl($xml, $url,false, $timeout);
+        $response = self::postXmlCurl($xml, $url);
         if(!$response)
         {
             return false;
@@ -42,7 +44,7 @@ class Api
         $params['sign'] = Util::makeSign($config['key'],$params);
 
         $xml = Util::toXml($params);
-        $response = self::postXmlCurl($xml, $url, false);
+        $response = self::postXmlCurl($xml, $url);
 
         if(!$response)
         {
@@ -63,7 +65,7 @@ class Api
         ];
 
         $xml = Util::toXml($data);
-        $response = self::postXmlCurl($xml, $url, false);
+        $response = self::postXmlCurl($xml, $url);
 
         if(!$response)
         {
@@ -71,8 +73,43 @@ class Api
         }
         return Util::fromXml($response);
     }
-    private static function postXmlCurl($xml, $url, $useCert = false, $second = 30)
+
+    public static function closeorder($config, $out_trade_no)
     {
+        $url = 'https://api.mch.weixin.qq.com/pay/closeorder';
+        $data = [
+            'appid'=>$config['appid'],
+            'mch_id'=>$config['mch_id'],
+            'out_trade_no'=>$out_trade_no,
+            'nonce_str'=>Util::getNonceStr(),
+            'sign_type'=>'MD5'
+        ];
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml, $url);
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    public static function report($config, $params)
+    {
+        $url = 'https://api.mch.weixin.qq.com/payitil/report';
+        $data = [];
+
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml, $url);
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    private static function postXmlCurl($xml, $url, $useCert = false, $second = 20)
+    {
+        self::logger('debug', $xml);
         $ch = curl_init();
         $curlVersion = curl_version();
         $ua = "WXPay/".self::$VERSION." (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version'];
@@ -106,13 +143,47 @@ class Api
         $data = curl_exec($ch);
         //返回结果
         if($data){
+            self::logger('debug', $data);
             curl_close($ch);
             return $data;
         } else {
             $error = curl_errno($ch);
             curl_close($ch);
-            return false;
+            $msg = [
+                'errorno'=>$error,
+                'errormsg'=>Errors::curlCodeMsg($error)
+            ];
+           self::logger('error', $msg);
+           return false;
         }
     }
 
+    protected static function logger($level, $data)
+    {
+        $log = new Logger('wechat-pay');
+        $root_path = dirname(__DIR__);
+        $log_path = $root_path.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'wechat-pay.log';
+        $log->pushHandler(new StreamHandler($log_path, Logger::DEBUG));
+        $msg = $data;
+        if(is_array($data))
+        {
+            $msg = json_encode($data);
+        }
+        switch ($level)
+        {
+            case 'warning':
+                $log->warning($msg);
+                break;
+            case 'error':
+                $log->error($msg);
+                break;
+            case 'debug':
+                $log->debug($msg);
+                break;
+            case 'info':
+                $log->info($msg);
+                break;
+        }
+
+    }
 }
