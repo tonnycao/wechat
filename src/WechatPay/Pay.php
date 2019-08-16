@@ -28,7 +28,7 @@ class Pay
 
         $logger = $this->initLog($log_path);
         $this->logger = $logger;
-        $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst($trade_type);
+        $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst(strtolower($trade_type));
         if(!class_exists($className))
         {
             throw new PayTypeException();
