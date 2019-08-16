@@ -15,6 +15,7 @@ class Pay
     protected $key = NULL;
     protected $notify_url = NULL;
     protected $log_path = NULL;
+    protected $logger = NULL;
 
     public function __construct($appId, $machId, $key, $trade_type, $notify_url, $log_path)
     {
@@ -26,6 +27,7 @@ class Pay
 
 
         $logger = $this->initLog($log_path);
+        $this->logger = $logger;
         $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst($trade_type);
         if(!class_exists($className))
         {
@@ -84,6 +86,7 @@ class Pay
     public function notify(&$data)
     {
         $xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
+        $this->logger->debug($xml);
         $result = Notify::handle($this->key, $xml, $data);
         if($result['code']==1)
         {
