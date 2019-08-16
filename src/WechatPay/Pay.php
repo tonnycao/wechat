@@ -84,7 +84,7 @@ class Pay
     public function notify(&$data)
     {
         $xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        $result = Notify::handle($xml, $data);
+        $result = Notify::handle($this->key, $xml, $data);
         if($result['code']==1)
         {
             Notify::replyOk();
