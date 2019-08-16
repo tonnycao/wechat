@@ -9,11 +9,13 @@ use Inesadt\WechatPay\Api;
 class Native
 {
 
-    const VERSION = 0.1;
+    const VERSION = 0.2;
 
     //下单
     public function order($config, $params)
     {
+        $params['trade_type'] = $this->getName();
+
         $result = Api::unifiedorder($config, $params);
         if(!$result)
         {
@@ -66,7 +68,7 @@ class Native
 
     public function getName()
     {
-        return 'Native';
+        return 'NATIVE';
     }
 
     public function getVersion()

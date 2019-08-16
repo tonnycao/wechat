@@ -15,6 +15,8 @@ class Api
         $data = $param;
         $data['appid'] = $config['appid'];
         $data['mch_id'] = $config['mch_id'];
+        $data['notify_url'] = $config['notify_url'];
+
         $data['time_start'] = date('YmdHis');
         $data['time_expire'] = date('YmdHis',time()+ 600);
         $data['spbill_create_ip'] = Util::getClientIp();

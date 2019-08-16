@@ -1,6 +1,6 @@
 <?php
-echo phpinfo();
-$client = new Yar_client("http://order.bestbox3inter.com/rpc.php");
+
+$client = new Yar_client("http://order.bestbox.com/package.php");
 
 
 
@@ -9,11 +9,11 @@ $client = new Yar_client("http://order.bestbox3inter.com/rpc.php");
 //$client->SetOpt(YAR_OPT_PACKAGER, "json");
 
 /* call directly */
-var_dump($client->add(1, 2));
+var_dump($client->getList());
 
 /* call via call */
-var_dump($client->call("add", array(3, 2)));
-
-echo $client->hehe2(array('name' => 'Test', 'age' => 27))." \n";
+//var_dump($client->call("hello", array('name'=>'caojian')));
+//
+//echo $client->hehe2(array('name' => 'Test', 'age' => 27))." \n";
 /* __add can not be called */
 //var_dump($client->_add(1, 2));

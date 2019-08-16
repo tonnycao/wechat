@@ -6,17 +6,19 @@ use Inesadt\WechatPay\Exceptions\PayTypeException;
 
 class Pay
 {
-    const VERSION = 0.1;
+    const VERSION = 0.2;
     protected $appId = NULL;
     protected $machId = NULL;
     protected $tradeType = NULL;
     protected $key = NULL;
+    protected $notify_url = NULL;
 
-    public function __construct($appId, $machId, $key, $trade_type)
+    public function __construct($appId, $machId, $key, $trade_type, $notify_url)
     {
         $this->appId = $appId;
         $this->machId = $machId;
         $this->key = $key;
+        $this->notify_url = $notify_url;
 
         try{
             $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst($trade_type);
@@ -30,12 +32,17 @@ class Pay
     }
 
 
-    public function order($params)
+    public function order($amount, $desc, $out_trade_no)
     {
         $config = [
             'appid'=>$this->appId,
             'mch_id'=>$this->machId,
             'key'=>$this->key
+        ];
+        $params = [
+            'total_fee'=>$amount,
+            'body'=>$desc,
+            'out_trade_no'=>$out_trade_no
         ];
         $response = $this->tradeType->order($config,$params);
         return $response;
