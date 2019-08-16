@@ -1,8 +1,8 @@
 <?php
 
 
-namespace Inesadt\WechatPay;
-use Inesadt\WechatPay\Exceptions\PayTypeException;
+namespace Inesadt\Wechat;
+use Inesadt\Wechat\Exceptions\TradeException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -26,22 +26,27 @@ class Pay
         $this->log_path = $log_path;
 
 
-        $logger = $this->initLog($log_path);
+        $logger = $this->setLogger($log_path);
         $this->logger = $logger;
-        $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst(strtolower($trade_type));
+        $className = 'Inesadt\\Wechat\\Trade\\'.ucfirst(strtolower($trade_type));
         if(!class_exists($className))
         {
-            throw new PayTypeException();
+            throw new TradeException();
         }
         $this->tradeType = new $className($logger);
 
     }
 
-    protected function initLog($log_path)
+    protected function setLogger($log_path)
     {
         $log = new Logger('wechat-pay');
         $log->pushHandler(new StreamHandler($log_path, Logger::DEBUG));
         return $log;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 
     public function order($amount, $desc, $out_trade_no)

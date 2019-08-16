@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Inesadt\WechatPay\TradeType;
+namespace Inesadt\Wechat\Trade;
 
 
-use Inesadt\WechatPay\Api;
+use Inesadt\Wechat\Api;
 
 class Native
 {

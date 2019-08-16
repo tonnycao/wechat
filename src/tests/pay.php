@@ -2,7 +2,7 @@
 
 require 'bootstrap.php';
 
-use Inesadt\WechatPay\Pay;
+use Inesadt\Wechat\Pay;
 
 $appid = 'appid098';
 $mch = 123456;

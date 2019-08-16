@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Inesadt\WechatPay;
+namespace Inesadt\Wechat;
 
 
 class Util

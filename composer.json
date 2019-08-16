@@ -15,11 +15,11 @@
     ],
 	"autoload": {
         "psr-4": {
-            "Inesadt\\WechatPay\\": "src/WechatPay/"
+            "Inesadt\\Wechat\\": "src/Wechat/"
         }
     },
     "files": [
-        "src/WechatPay/phpqrcode.php"
+        "src/Wechat/phpqrcode.php"
     ],
 	"repositories": {
         "packagist": {
