@@ -11,6 +11,14 @@ class Native
 
     const VERSION = 0.2;
 
+    protected $logger = NULL;
+
+    public function __construct($logger)
+    {
+        $this->logger = $logger;
+        Api::setLogger($this->logger);
+    }
+
     //下单
     public function order($config, $params)
     {

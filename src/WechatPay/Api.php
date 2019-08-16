@@ -3,11 +3,23 @@
 
 namespace Inesadt\WechatPay;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 class Api
 {
+    const VERSION = 0.2;
+    protected static $logger = NULL;
+
+    public static function setLogger($logger)
+    {
+        if(!isset(self::$logger))
+        {
+            self::$logger = $logger;
+        }
+    }
+
+    public static function getLogger()
+    {
+        return self::$logger;
+    }
 
     public static function unifiedorder($config, $param)
     {
@@ -111,16 +123,16 @@ class Api
 
     private static function postXmlCurl($xml, $url, $useCert = false, $second = 20)
     {
-        self::logger('debug', $xml);
+        self::$logger->debug($xml);
         $ch = curl_init();
         $curlVersion = curl_version();
-        $ua = "WXPay/".self::$VERSION." (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version'];
+        $ua = "WXPay/".self::VERSION." (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version'];
 
         //设置超时
         curl_setopt($ch, CURLOPT_TIMEOUT, $second);
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,TRUE);
-        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,2);//严格校验
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,0);//严格校验
         curl_setopt($ch,CURLOPT_USERAGENT, $ua);
         //设置header
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
@@ -145,7 +157,7 @@ class Api
         $data = curl_exec($ch);
         //返回结果
         if($data){
-            self::logger('debug', $data);
+            self::$logger->debug(json_encode($data));
             curl_close($ch);
             return $data;
         } else {
@@ -155,17 +167,14 @@ class Api
                 'errorno'=>$error,
                 'errormsg'=>Errors::curlCodeMsg($error)
             ];
-           self::logger('error', $msg);
+            self::$logger->error(json_encode($msg));
            return false;
         }
     }
 
     protected static function logger($level, $data)
     {
-        $log = new Logger('wechat-pay');
-        $root_path = dirname(dirname(__DIR__));
-        $log_path = $root_path.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'wechat-pay.log';
-        $log->pushHandler(new StreamHandler($log_path, Logger::DEBUG));
+
         $msg = $data;
         if(is_array($data))
         {

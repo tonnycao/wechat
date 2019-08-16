@@ -14,11 +14,11 @@ class Util
         $type = $type ? 1 : 0;
         $ip =  NULL;
         if ($ip !== NULL) return $ip[$type];
-        if($_SERVER['HTTP_X_REAL_IP'])
+        if(isset($_SERVER['HTTP_X_REAL_IP']) && !empty($_SERVER['HTTP_X_REAL_IP']))
         {
             //nginx 代理模式下，获取客户端真实IP
             $ip = $_SERVER['HTTP_X_REAL_IP'];
-        }elseif (isset($_SERVER['HTTP_CLIENT_IP']))
+        }elseif (isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']))
         {
             //客户端的ip
             $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -31,7 +31,7 @@ class Util
         }elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $ip = $_SERVER['REMOTE_ADDR'];//浏览当前页面的用户计算机的ip地址
         }else{
-            $ip = $_SERVER['REMOTE_ADDR'];
+            $ip = '';
         }
         // IP地址合法验证
         $long = sprintf("%u",ip2long($ip));

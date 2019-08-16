@@ -3,6 +3,8 @@
 
 namespace Inesadt\WechatPay;
 use Inesadt\WechatPay\Exceptions\PayTypeException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Pay
 {
@@ -12,32 +14,41 @@ class Pay
     protected $tradeType = NULL;
     protected $key = NULL;
     protected $notify_url = NULL;
+    protected $log_path = NULL;
 
-    public function __construct($appId, $machId, $key, $trade_type, $notify_url)
+    public function __construct($appId, $machId, $key, $trade_type, $notify_url, $log_path)
     {
         $this->appId = $appId;
         $this->machId = $machId;
         $this->key = $key;
         $this->notify_url = $notify_url;
+        $this->log_path = $log_path;
 
-        try{
-            $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst($trade_type);
-            $this->tradeType = new $className;
-            throw new PayTypeException();
-        }catch (PayTypeException $e)
+
+        $logger = $this->initLog($log_path);
+        $className = 'Inesadt\\WechatPay\\TradeType\\'.ucfirst($trade_type);
+        if(!class_exists($className))
         {
-            print($e->customFunction());
+            throw new PayTypeException();
         }
+        $this->tradeType = new $className($logger);
 
     }
 
+    protected function initLog($log_path)
+    {
+        $log = new Logger('wechat-pay');
+        $log->pushHandler(new StreamHandler($log_path, Logger::DEBUG));
+        return $log;
+    }
 
     public function order($amount, $desc, $out_trade_no)
     {
         $config = [
             'appid'=>$this->appId,
             'mch_id'=>$this->machId,
-            'key'=>$this->key
+            'key'=>$this->key,
+            'notify_url'=>$this->notify_url
         ];
         $params = [
             'total_fee'=>$amount,
@@ -50,12 +61,24 @@ class Pay
 
     public function query($out_trade_no)
     {
-
+        $config = [
+            'appid'=>$this->appId,
+            'mch_id'=>$this->machId,
+            'key'=>$this->key,
+            'notify_url'=>$this->notify_url
+        ];
+        return $this->tradeType->query($config, $out_trade_no);
     }
 
     public function close($out_trade_no)
     {
-
+        $config = [
+            'appid'=>$this->appId,
+            'mch_id'=>$this->machId,
+            'key'=>$this->key,
+            'notify_url'=>$this->notify_url
+        ];
+        return $this->tradeType->close($config, $out_trade_no);
     }
 
     public function notify(&$data)
