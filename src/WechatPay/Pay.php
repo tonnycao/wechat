@@ -58,10 +58,9 @@ class Pay
 
     }
 
-    public function notify()
+    public function notify(&$data)
     {
         $xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        $data = [];
         $result = Notify::handle($xml, $data);
         if($result['code']==1)
         {
@@ -69,7 +68,7 @@ class Pay
         }else{
             Notify::replyFail($result['msg']);
         }
-        return $data;
+        return $result;
     }
 
     public function refund($out_trade_no, $refund_out_trade_no, $total_fee, $refund_fee)
