@@ -29,16 +29,6 @@ class Native
         {
             return false;
         }
-        $result['short_url'] = '';
-        if($result['return_code']=='SUCCESS' && $result['result_code']=='SUCCESS' )
-        {
-            $url = self::shortUrl($config, $result['code_url']);
-            if(!empty($url))
-            {
-                $result['short_url'] = $url;
-            }
-        }
-
         return $result;
     }
 
