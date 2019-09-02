@@ -30,7 +30,7 @@ class Api
         $data['notify_url'] = $config['notify_url'];
 
         $data['time_start'] = date('YmdHis');
-        $data['time_expire'] = date('YmdHis',time()+ 600);
+        $data['time_expire'] = date('YmdHis',time()+ 1800);
         $data['spbill_create_ip'] = Util::getClientIp();
         $data['nonce_str'] = Util::getNonceStr();
         $data['sign_type'] = 'MD5';
@@ -135,9 +135,10 @@ class Api
         $data['nonce_str'] = Util::getNonceStr();
         $data['sign_type'] = 'MD5';
         $data['sign'] = Util::makeSign($config['key'], $data);
-
+        $sslCertPath = $param['cert_path'];
+        $sslKeyPath = $param['key_path'];
         $xml = Util::toXml($data);
-        $response = self::postXmlCurl($xml, $url);
+        $response = self::postXmlCurl($xml, $url, 2,true, $sslCertPath, $sslKeyPath);
         if(!$response)
         {
             return false;
@@ -168,7 +169,7 @@ class Api
         return Util::fromXml($response);
     }
 
-    private static function postXmlCurl($xml, $url, $useCert = false, $second = 20)
+    private static function postXmlCurl($xml, $url, $second = 2, $useCert = false, $sslCertPath='', $sslKeyPath='')
     {
         self::$logger->debug($xml);
         $ch = curl_init();
@@ -190,8 +191,6 @@ class Api
             //设置证书
             //使用证书：cert 与 key 分别属于两个.pem文件
             //证书文件请放入服务器的非web目录下
-            $sslCertPath = "";
-            $sslKeyPath = "";
             curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
             curl_setopt($ch,CURLOPT_SSLCERT, $sslCertPath);
             curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
