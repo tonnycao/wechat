@@ -21,7 +21,7 @@ class Api
         return self::$logger;
     }
 
-    public static function unifiedorder($config, $param)
+    public static function unifiedOrder($config, $param)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $data = $param;
@@ -45,7 +45,7 @@ class Api
         return Util::fromXml($response);
     }
 
-    public static function orderquery($config, $out_trade_no)
+    public static function orderQuery($config, $out_trade_no)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/orderquery';
         $params = [
@@ -67,7 +67,7 @@ class Api
         return Util::fromXml($response);
     }
 
-    public static function shorturl($config, $long_url)
+    public static function shortUrl($config, $long_url)
     {
         $url = 'https://api.mch.weixin.qq.com/tools/shorturl';
         $data = [
@@ -88,7 +88,7 @@ class Api
         return Util::fromXml($response);
     }
 
-    public static function closeorder($config, $out_trade_no)
+    public static function closeOrder($config, $out_trade_no)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/closeorder';
         $data = [
@@ -112,6 +112,53 @@ class Api
         $url = 'https://api.mch.weixin.qq.com/payitil/report';
         $data = [];
 
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml, $url);
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    public static function refund($config, $param)
+    {
+        $url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
+        $data = $param;
+        $data['appid'] = $config['appid'];
+        $data['mch_id'] = $config['mch_id'];
+        if(!empty($config['notify_url']))
+        {
+            $data['notify_url'] = $config['notify_url'];
+        }
+
+        $data['nonce_str'] = Util::getNonceStr();
+        $data['sign_type'] = 'MD5';
+        $data['sign'] = Util::makeSign($config['key'], $data);
+
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml, $url);
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    public static function refundQuery($config, $refund_order_no,$offset=0)
+    {
+        $url = 'https://api.mch.weixin.qq.com/pay/refundquery';
+        $data = [
+            'appid'=>$config['appid'],
+            'mch_id'=>$config['mch_id'],
+            'out_refund_no'=>$refund_order_no,
+            'nonce_str'=>Util::getNonceStr(),
+            'sign_type'=>'MD5'
+        ];
+        if($offset>0)
+        {
+            $data['offset'] = $offset;
+        }
         $xml = Util::toXml($data);
         $response = self::postXmlCurl($xml, $url);
         if(!$response)
@@ -172,29 +219,4 @@ class Api
         }
     }
 
-    protected static function logger($level, $data)
-    {
-
-        $msg = $data;
-        if(is_array($data))
-        {
-            $msg = json_encode($data);
-        }
-        switch ($level)
-        {
-            case 'warning':
-                $log->warning($msg);
-                break;
-            case 'error':
-                $log->error($msg);
-                break;
-            case 'debug':
-                $log->debug($msg);
-                break;
-            case 'info':
-                $log->info($msg);
-                break;
-        }
-
-    }
 }

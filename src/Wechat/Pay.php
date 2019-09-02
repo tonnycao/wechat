@@ -49,7 +49,7 @@ class Pay
         return $this->logger;
     }
 
-    public function order($amount, $desc, $out_trade_no)
+    public function order($amount, $desc, $out_trade_no, $product_id='', $openid='', $limit_pay='', $receipt='')
     {
         $config = [
             'appid'=>$this->appId,
@@ -62,6 +62,22 @@ class Pay
             'body'=>$desc,
             'out_trade_no'=>$out_trade_no
         ];
+        if(!empty($product_id))
+        {
+            $params['product_id'] = $product_id;
+        }
+        if(!empty($openid))
+        {
+            $params['openid'] = $openid;
+        }
+        if(!empty($limit_pay) && $limit_pay=='no_credit')
+        {
+            $params['limit_pay'] = $limit_pay;
+        }
+        if(!empty($receipt) && $receipt=='Y')
+        {
+            $params['receipt'] = $receipt;
+        }
         $response = $this->tradeType->order($config,$params);
         return $response;
     }
