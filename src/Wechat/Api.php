@@ -176,7 +176,6 @@ class Api
             $config['timeout'] = 100;
         }
         $data['sign'] = Util::makeSign($config['key'], $data);
-        var_dump($data);
         $xml = Util::toXml($data);
         $response = self::postXmlCurl($xml, $url,$config['timeout']);
 
