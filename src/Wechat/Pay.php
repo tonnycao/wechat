@@ -118,9 +118,29 @@ class Pay
         return $result;
     }
 
-    public function refund($out_trade_no, $refund_out_trade_no, $total_fee, $refund_fee)
+    public function refund($out_trade_no, $refund_out_trade_no, $total_fee, $refund_fee, $refund_desc='', $refund_account='')
     {
-
+        $config = [
+            'appid'=>$this->appId,
+            'mch_id'=>$this->machId,
+            'key'=>$this->key,
+            'notify_url'=>$this->notify_url
+        ];
+        $params = [
+            'out_trade_no'=>$out_trade_no,
+            'out_refund_no'=>$refund_out_trade_no,
+            'total_fee'=>$total_fee,
+            'refund_fee'=>$refund_fee
+        ];
+        if(!empty($refund_desc))
+        {
+            $params['refund_desc'] = $refund_desc;
+        }
+        if(!empty($refund_account))
+        {
+            $params['refund_account'] = $refund_account;
+        }
+        return $this->tradeType->refund($config, $params);
     }
 
     public function refundQuery($out_refund_no)

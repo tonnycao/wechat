@@ -4,10 +4,10 @@ require 'bootstrap.php';
 
 use Inesadt\Wechat\Pay;
 
-$appid = 'appid098';
-$mch = 123456;
+$appid = 'wx9f54fdb0c89382ba';
+$mch = 1515530431;
 $type = 'native';
-$key = 'key';
+$key = 'otvcloud2015otvcloud2018hahahaha';
 $notify = 'https://cloud.tencent.com/document/product/583/19695';
 $log_path = dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR.'pay.log';
 

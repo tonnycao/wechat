@@ -6,6 +6,20 @@ namespace Inesadt\Wechat;
 
 class Util
 {
+    public static function makeHmacSign($key, $params)
+    {
+        ksort($params);
+        $string = self::toUrlParams($params);
+        $string = hash_hmac('sha256',$string,$key);
+        $result = strtoupper($string);
+        return $result;
+    }
+
+    public static function handleGzipData($data)
+    {
+
+        return $data;
+    }
 
     //获取客户端IP
     public static function getClientIp($type=0)

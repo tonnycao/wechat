@@ -64,6 +64,26 @@ class Native
         return $result;
     }
 
+    //退款
+    public function refund($config, $params)
+    {
+        if(empty($params['out_trade_no']) || empty($params['refund_trade_no']) || empty($params['total_fee']) || empty($params['refund_fee']))
+        {
+            return false;
+        }
+        return Api::report($config,$params);
+    }
+
+    //退款查询
+    public function refundQuery($config,$refund_trade_no,$offset=0)
+    {
+        if(empty($refund_trade_no))
+        {
+            return false;
+        }
+        return Api::refundQuery($config,$refund_trade_no,$offset);
+    }
+
     public function getName()
     {
         return 'NATIVE';
