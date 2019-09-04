@@ -294,7 +294,6 @@ class Api
         } else {
             $error = curl_errno($ch);
             curl_close($ch);
-            var_dump($error);
             $msg = [
                 'errorno'=>$error,
                 'errormsg'=>Errors::curlCodeMsg($error)
