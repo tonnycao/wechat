@@ -49,7 +49,7 @@ class Pay
         return $this->logger;
     }
 
-    public function order($amount, $desc, $out_trade_no, $product_id='', $openid='', $limit_pay='', $receipt='')
+    public function order($amount, $desc, $out_trade_no, $product_id='', $device_info='', $openid='', $limit_pay='', $receipt='')
     {
         $config = [
             'appid'=>$this->appId,
@@ -65,6 +65,10 @@ class Pay
         if(!empty($product_id))
         {
             $params['product_id'] = $product_id;
+        }
+        if(!empty($device_info))
+        {
+            $params['device_info'] = $device_info;
         }
         if(!empty($openid))
         {
