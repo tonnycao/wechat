@@ -6,6 +6,11 @@ use Inesadt\Wechat\Exceptions\TradeException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
+/***
+ * @todo 支付主类
+ * Class Pay
+ * @package Inesadt\Wechat
+ */
 class Pay
 {
     const VERSION = 0.2;

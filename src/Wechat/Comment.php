@@ -3,7 +3,11 @@
 
 namespace Inesadt\Wechat;
 
-
+/***
+ * @todo 支付评价类
+ * Class Comment
+ * @package Inesadt\Wechat
+ */
 class Comment
 {
     const VERSION = 0.1;

@@ -1,11 +1,20 @@
 <?php
 
-
 namespace Inesadt\Wechat;
 
-
+/**
+ * @todo 通用工具类
+ * Class Util
+ * @package Inesadt\Wechat
+ */
 class Util
 {
+    /***
+     * @todo HMAC签名
+     * @param $key
+     * @param $params
+     * @return string
+     */
     public static function makeHmacSign($key, $params)
     {
         ksort($params);
@@ -21,7 +30,11 @@ class Util
         return $data;
     }
 
-    //获取客户端IP
+    /**
+     * @todo 获取客户端IP
+     * @param int $type
+     * @return mixed
+     */
     public static function getClientIp($type=0)
     {
         global $_SERVER;
@@ -53,6 +66,12 @@ class Util
         return $ip[$type];
     }
 
+    /**
+     * @tood MD5签名
+     * @param $key
+     * @param $params
+     * @return string
+     */
     public static function makeSign($key, $params)
     {
         ksort($params);
@@ -63,6 +82,11 @@ class Util
         return $result;
     }
 
+    /***
+     * @todo 字符随机数
+     * @param int $length
+     * @return string
+     */
     public static function getNonceStr($length = 32)
     {
         $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -73,9 +97,12 @@ class Util
         return $str;
     }
 
+    /***
+     * @todo 获取毫秒的时间戳
+     * @return array|string
+     */
     public static function getMillisecond()
     {
-        //获取毫秒的时间戳
         $time = explode ( " ", microtime () );
         $time = $time[1] . ($time[0] * 1000);
         $time2 = explode( ".", $time );
@@ -83,6 +110,11 @@ class Util
         return $time;
     }
 
+    /***
+     * @todo 数组转XML字符串
+     * @param $values
+     * @return string
+     */
     public static function toXml($values)
     {
         $xml = "<xml>";
@@ -98,6 +130,11 @@ class Util
         return $xml;
     }
 
+    /**
+     * @todo XML字符串转数组
+     * @param $xml
+     * @return mixed
+     */
     public static function fromXml($xml)
     {
         //将XML转为array
@@ -107,6 +144,11 @@ class Util
         return $values;
     }
 
+    /***
+     * @todo 数组转URL
+     * @param $values
+     * @return string
+     */
     public static function toUrlParams($values)
     {
         $buff = "";

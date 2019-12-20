@@ -6,6 +6,11 @@ namespace Inesadt\Wechat\Trade;
 
 use Inesadt\Wechat\Api;
 
+/***
+ * @todo 扫码支付
+ * Class Native
+ * @package Inesadt\Wechat\Trade
+ */
 class Native
 {
 
@@ -19,9 +24,17 @@ class Native
         Api::setLogger($this->logger);
     }
 
-    //下单
+    /**
+     * @todo 下单
+     * @param $config
+     * @param $params
+     * @return bool|mixed
+     */
     public function order($config, $params)
     {
+        if(empty($params['product_id'])){
+            return false;
+        }
         $params['trade_type'] = $this->getName();
 
         $result = Api::unifiedOrder($config, $params);
@@ -32,7 +45,12 @@ class Native
         return $result;
     }
 
-    //缩短长地址
+    /**
+     * @todo 缩短长地址
+     * @param $config
+     * @param $long_url
+     * @return string
+     */
     public function shortUrl($config, $long_url)
     {
         $url = '';
@@ -50,21 +68,42 @@ class Native
         return $url;
     }
 
-    //查询订单
+    /***
+     * @todo 查询订单状态
+     * @param $config
+     * @param $out_trade_no
+     * @return bool|mixed
+     */
     public function query($config, $out_trade_no)
     {
+        if(empty($out_trade_no)){
+            return false;
+        }
         $result = Api::orderQuery($config, $out_trade_no);
         return $result;
     }
 
-    //关闭订单
+    /**
+     * @todo 关闭订单
+     * @param $config
+     * @param $out_trade_no
+     * @return bool|mixed
+     */
     public function close($config, $out_trade_no)
     {
+        if(empty($out_trade_no)){
+            return false;
+        }
         $result = Api::closeOrder($config, $out_trade_no);
         return $result;
     }
 
-    //退款
+    /***
+     * @todo 申请退款
+     * @param $config
+     * @param $params
+     * @return bool|mixed
+     */
     public function refund($config, $params)
     {
         if(empty($params['out_trade_no']) || empty($params['refund_trade_no']) || empty($params['total_fee']) || empty($params['refund_fee']))
@@ -74,7 +113,13 @@ class Native
         return Api::refund($config,$params);
     }
 
-    //退款查询
+    /**
+     * #todo 退款查询
+     * @param $config
+     * @param $refund_trade_no
+     * @param int $offset
+     * @return bool|mixed
+     */
     public function refundQuery($config,$refund_trade_no,$offset=0)
     {
         if(empty($refund_trade_no))

@@ -3,7 +3,11 @@
 
 namespace Inesadt\Wechat;
 
-
+/***
+ * @todo 异常编码类
+ * Class Errors
+ * @package Inesadt\Wechat
+ */
 class Errors
 {
         const CURL_CODE = [

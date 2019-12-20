@@ -3,6 +3,11 @@
 
 namespace Inesadt\Wechat;
 
+/***
+ * @todo 账单资金类
+ * Class Fund
+ * @package Inesadt\Wechat
+ */
 
 class Fund
 {

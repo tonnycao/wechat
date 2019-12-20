@@ -3,7 +3,11 @@
 
 namespace Inesadt\Wechat;
 
-
+/**
+ * @todo 通知处理类
+ * Class Notify
+ * @package Inesadt\Wechat
+ */
 class Notify
 {
     //0网络异常1正常-1验签失败

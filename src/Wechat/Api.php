@@ -1,13 +1,21 @@
 <?php
 
-
 namespace Inesadt\Wechat;
 
+/**
+ * @todo 微信服务交互类
+ * Class Api
+ * @package Inesadt\Wechat
+ */
 class Api
 {
-    const VERSION = 0.2;
+    const VERSION = 1.0;
     protected static $logger = NULL;
 
+    /***
+     * @todo 设置日志引擎
+     * @param $logger
+     */
     public static function setLogger($logger)
     {
         if(!isset(self::$logger))
@@ -16,11 +24,21 @@ class Api
         }
     }
 
+    /***
+     * @todo 获取日志引擎
+     * @return null
+     */
     public static function getLogger()
     {
         return self::$logger;
     }
 
+    /**
+     * @todo 统一下单
+     * @param $config
+     * @param $param
+     * @return bool|mixed
+     */
     public static function unifiedOrder($config, $param)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
@@ -52,6 +70,12 @@ class Api
         return $result;
     }
 
+    /**
+     * @todo 查询订单状态
+     * @param $config
+     * @param $out_trade_no
+     * @return bool|mixed
+     */
     public static function orderQuery($config, $out_trade_no)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/orderquery';
@@ -74,6 +98,39 @@ class Api
         return Util::fromXml($response);
     }
 
+    /***
+     * @todo 付款码支付
+     * @param $config
+     * @param $param
+     * @return bool|mixed
+     */
+    public static function micropay($config,$param)
+    {
+
+        $data = $param;
+        $data['appid'] = $config['appid'];
+        $data['mch_id'] = $config['mch_id'];
+        $data['time_start'] = date('YmdHis');
+        $data['time_expire'] = date('YmdHis',time()+ 1800);
+        $data['spbill_create_ip'] = Util::getClientIp();
+        $data['nonce_str'] = Util::getNonceStr();
+        $data['sign_type'] = 'MD5';
+        $data['sign'] = Util::makeSign($config['key'], $data);
+
+        $xml = Util::toXml($data);
+        $response = self::postXmlCurl($xml);
+
+        if(!$response){
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+    /**
+     * @todo 支付二维码短链接
+     * @param $config
+     * @param $long_url
+     * @return bool|mixed
+     */
     public static function shortUrl($config, $long_url)
     {
         $url = 'https://api.mch.weixin.qq.com/tools/shorturl';
@@ -95,6 +152,45 @@ class Api
         return Util::fromXml($response);
     }
 
+    /***
+     * @todo 撤销订单
+     * @param $config
+     * @param $transaction_id
+     * @param $out_trade_no
+     * @return bool|mixed
+     *
+     */
+    public static function reverse($config, $transaction_id, $out_trade_no)
+    {
+        $url = 'https://api.mch.weixin.qq.com/secapi/pay/reverse';
+        $data = [
+            'appid'=>$config['appid'],
+            'mch_id'=>$config['mch_id'],
+            'nonce_str'=>Util::getNonceStr(),
+            'out_trade_no'=>$out_trade_no,
+            'transaction_id'=>$transaction_id,
+        ];
+
+        $data['sign_type'] = 'MD5';
+        $data['sign'] = Util::makeSign($config['key'],$data);
+        $xml = Util::toXml($data);
+        $sslCertPath = $config['cert_path'];
+        $sslKeyPath = $config['key_path'];
+
+        $response = self::postXmlCurl($xml, $url, 2,true, $sslCertPath, $sslKeyPath);
+        if(!$response)
+        {
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    /***
+     * @todo 关闭订单
+     * @param $config
+     * @param $out_trade_no
+     * @return bool|mixed
+     */
     public static function closeOrder($config, $out_trade_no)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/closeorder';
@@ -115,6 +211,12 @@ class Api
     }
 
 
+    /***
+     * @todo 发起退款
+     * @param $config
+     * @param $param
+     * @return bool|mixed
+     */
     public static function refund($config, $param)
     {
         $url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
@@ -140,6 +242,13 @@ class Api
         return Util::fromXml($response);
     }
 
+    /***
+     * @todo 查询退款状态
+     * @param $config
+     * @param $refund_order_no
+     * @param int $offset
+     * @return bool|mixed
+     */
     public static function refundQuery($config, $refund_order_no,$offset=0)
     {
         $url = 'https://api.mch.weixin.qq.com/pay/refundquery';
@@ -163,6 +272,38 @@ class Api
         return Util::fromXml($response);
     }
 
+    /***
+     * @todo 付款授权码查询openid
+     * @param $config
+     * @param $auth_code
+     * @return bool|mixed
+     */
+    public static function authcode2openid($config, $auth_code)
+    {
+        $url = 'https://api.mch.weixin.qq.com/tools/authcodetoopenid';
+        $param = [
+            'appid'=>$config['appid'],
+            'mch_id'=>$config['mch_id'],
+            'auth_code'=>$auth_code,
+            'nonce_str'=>Util::getNonceStr(),
+        ];
+        $param['sign'] = Util::makeSign($config['key'],$param);
+        $xml = Util::toXml($param);
+        $response = self::postXmlCurl($xml,$url);
+        if(!$response){
+            return false;
+        }
+        return Util::fromXml($response);
+    }
+
+    /**
+     * @todo 下载账单
+     * @param $config
+     * @param $bill_date
+     * @param $bill_type
+     * @param string $tar_type
+     * @return bool|mixed|string
+     */
     public static function downloadBill($config,$bill_date,$bill_type, $tar_type='GZIP')
     {
         $url = 'https://api.mch.weixin.qq.com/pay/downloadbill';
@@ -200,6 +341,14 @@ class Api
         return $bills;
     }
 
+    /***
+     * @todo 下载账单流
+     * @param $config
+     * @param $bill_date
+     * @param $account_type
+     * @param string $tar_type
+     * @return bool|mixed|string
+     */
     public static function downloadFundFlow($config,$bill_date,$account_type,$tar_type='GZIP')
     {
         $url = 'https://api.mch.weixin.qq.com/pay/downloadfundflow';
@@ -233,6 +382,15 @@ class Api
         return $bills;
     }
 
+    /**
+     * @todo 查询支付评价带分页
+     * @param $config
+     * @param $begin_time
+     * @param $end_time
+     * @param $offset
+     * @param int $limit
+     * @return bool|string
+     */
     public static function batchQueryComment($config,$begin_time,$end_time,$offset,$limit=20)
     {
         $url = 'https://api.mch.weixin.qq.com/billcommentsp/batchquerycomment';
@@ -256,6 +414,16 @@ class Api
         return $response;
     }
 
+    /**
+     * @todo curl post请求
+     * @param $xml
+     * @param $url
+     * @param int $second
+     * @param bool $useCert
+     * @param string $sslCertPath
+     * @param string $sslKeyPath
+     * @return bool|string
+     */
     private static function postXmlCurl($xml, $url, $second = 2, $useCert = false, $sslCertPath='', $sslKeyPath='')
     {
         if(isset(self::$logger))
