@@ -42,7 +42,14 @@ class Api
         {
             return false;
         }
-        return Util::fromXml($response);
+        $result =  Util::fromXml($response);
+        if(!$result){
+            return $result;
+        }
+        $result['client_ip'] = $data['spbill_create_ip'];
+        $result['time_start'] = $data['time_start'];
+        $result['time_expire'] = $data['time_expire'];
+        return $result;
     }
 
     public static function orderQuery($config, $out_trade_no)

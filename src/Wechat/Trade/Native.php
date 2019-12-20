@@ -9,7 +9,7 @@ use Inesadt\Wechat\Api;
 class Native
 {
 
-    const VERSION = 0.2;
+    const VERSION = 1.0;
 
     protected $logger = NULL;
 
@@ -71,7 +71,7 @@ class Native
         {
             return false;
         }
-        return Api::report($config,$params);
+        return Api::refund($config,$params);
     }
 
     //退款查询
