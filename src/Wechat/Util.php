@@ -10,6 +10,15 @@ namespace Inesadt\Wechat;
 class Util
 {
     /***
+     * @todo 获取服务器IP
+     * @return mixed
+     */
+    public static function getServerIp()
+    {
+        global $_SERVER;
+        return $_SERVER['SERVER_ADDR'];
+    }
+    /***
      * @todo HMAC签名
      * @param $key
      * @param $params

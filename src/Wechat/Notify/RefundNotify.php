@@ -12,7 +12,7 @@ use Inesadt\Wechat\Util;
  * Class RefundNotify
  * @package Inesadt\Wechat\Notify
  */
-class RefundNotify extends Base
+class RefundNotify extends NotifyBase
 {
 
     /**

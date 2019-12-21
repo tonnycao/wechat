@@ -9,7 +9,7 @@ namespace Inesadt\Wechat\Notify;
  * Class AllocationNotify
  * @package Inesadt\Wechat\Notify
  */
-class AllocationNotify extends Base
+class AllocationNotify extends NotifyBase
 {
 
 }

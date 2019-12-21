@@ -12,7 +12,7 @@ use Inesadt\Wechat\Notify;
  * Class PayNotify
  * @package Inesadt\Wechat\Notify
  */
-class PayNotify extends Base
+class PayNotify extends NotifyBase
 {
 
     public function handle(){

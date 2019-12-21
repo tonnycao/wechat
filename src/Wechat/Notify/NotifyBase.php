@@ -4,6 +4,7 @@
 namespace Inesadt\Wechat\Notify;
 
 
+
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -12,7 +13,7 @@ use Monolog\Logger;
  * Class Base
  * @package Inesadt\Wechat\Notify
  */
-class Base
+class NotifyBase
 {
     protected $raw_xml = '';
     protected $result = [];

@@ -424,7 +424,7 @@ class Api
      * @param string $sslKeyPath
      * @return bool|string
      */
-    private static function postXmlCurl($xml, $url, $second = 2, $useCert = false, $sslCertPath='', $sslKeyPath='')
+    public static function postXmlCurl($xml, $url, $second = 2, $useCert = false, $sslCertPath='', $sslKeyPath='')
     {
         if(isset(self::$logger))
         {
