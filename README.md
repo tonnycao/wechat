@@ -1,26 +1,26 @@
-## mch wechat pay
-### features 功能
-#### trade type 支付场景
-     1. jsapi 公众号支付
-     2. micropay 扫码支付
-     3. native 条码支付
-     4. wxaapi 小程序支付
-#### tool 营销功能
-     1. 卡券
-     2. 红包
-     3. 企业到银行卡付款
-     4. 商户直连分账
+## Mch Wechat Pay
+### Features
+#### Trade type
+     1. jsapi
+     2. micropay
+     3. native
+     4. wxaapi
+#### Tool
+     1. coupon
+     2. redpack
+     3. bank
+     4. allocation
 
 
-### install 安装说明
-##### php组件
+### Install
+##### PHP Extensions
       1. openssl 
       2. sodium
       
-##### 第三方组件
+##### Third Part Lib 
       1. Psr\Log
       2. Monolog
-#### composer 
+#### Composer 
      composer require inesadt/wechat_pay
     
 
