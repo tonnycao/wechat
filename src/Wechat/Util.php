@@ -179,6 +179,10 @@ class Util
      * @return int
      */
     public static function rsaOpensslDecode($data, $rsa){
+        $check = extension_loaded('openssl');
+        if($check === false){
+            return false;
+        }
         $private_key = openssl_pkey_get_private($rsa);
         if (!$private_key) {
             return false;
@@ -197,6 +201,10 @@ class Util
      * @return int|string
      */
     public static function rsaOpensslEncode($data,$rsa){
+        $check = extension_loaded('openssl');
+        if($check === false){
+            return false;
+        }
         //公钥加密
         $key = openssl_pkey_get_public($rsa);
         if (!$key) {

@@ -18,9 +18,6 @@
             "Inesadt\\Wechat\\": "src/Wechat/"
         }
     },
-    "files": [
-        "src/Wechat/phpqrcode.php"
-    ],
 	"repositories": {
         "packagist": {
             "type": "composer",
