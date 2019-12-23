@@ -171,4 +171,56 @@ class Util
         $buff = trim($buff, "&");
         return $buff;
     }
+
+    /***
+     * @todo 用Openssl RSA解密
+     * @param $data
+     * @param $rsa
+     * @return int
+     */
+    public static function rsaOpensslDecode($data, $rsa){
+        $private_key = openssl_pkey_get_private($rsa);
+        if (!$private_key) {
+            return false;
+        }
+        $return_de = openssl_private_decrypt(base64_decode($data), $decrypted, $private_key);
+        if (!$return_de) {
+            return false;
+        }
+        return $decrypted;
+    }
+
+    /***
+     * @todo 用Openssl RSA加密
+     * @param $data
+     * @param $rsa
+     * @return int|string
+     */
+    public static function rsaOpensslEncode($data,$rsa){
+        //公钥加密
+        $key = openssl_pkey_get_public($rsa);
+        if (!$key) {
+            return false;
+        }
+        $return_en = openssl_public_encrypt($data, $crypted, $key, OPENSSL_PKCS1_OAEP_PADDING);
+        if (!$return_en) {
+            return false;
+        }
+        return base64_encode($crypted);
+    }
+
+    public static function sodiumAes256gcmDecrypt($key,$associated_data,$ciphertext,$nonce){
+        $check_sodium_mod = extension_loaded('sodium');
+        if($check_sodium_mod === false){
+            return false;
+        }
+        $check_aes256gcm = sodium_crypto_aead_aes256gcm_is_available();
+        if($check_aes256gcm === false){
+            return false;
+        }
+
+        $pem = sodium_crypto_aead_aes256gcm_decrypt(base64_decode($ciphertext),$associated_data,$nonce,$key);
+        return $pem;
+    }
+
 }
