@@ -10,6 +10,17 @@ namespace Inesadt\Wechat;
  */
 class Notify
 {
+
+    public static function validSign($key, $post)
+    {
+        $flag = false;
+        $sign = Util::makeSign($key,$post);
+        if($sign == $post['sign']){
+            $flag = true;
+        }
+        return $flag;
+    }
+
     //0网络异常1正常-1验签失败
     public static function handle($key, $xml, &$data)
     {
