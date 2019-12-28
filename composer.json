@@ -4,7 +4,10 @@
     "type": "library",
     "require": {
 		"php": ">=7.2.0",
-		"monolog/monolog" : "1.24.0"
+		"monolog/monolog" : "1.24.0",
+        "ext_curl": "*",
+        "ext_openssl": "*",
+        "ext_sodium": "*"
     },
     "license": "MIT",
     "authors": [

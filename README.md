@@ -14,12 +14,12 @@
 
 ### Install
 ##### PHP Extensions
-      1. openssl 
-      2. sodium
+      1. curle
+      2. openssl 
+      3. sodium
       
 ##### Dependency Packages
-      1. Psr\Log
-      2. Monolog
+      1. Monolog
 #### Composer 
      composer require inesadt/wechat_pay
     
