@@ -17,7 +17,7 @@
       1. openssl 
       2. sodium
       
-##### Third Part Lib 
+##### Dependency Packages
       1. Psr\Log
       2. Monolog
 #### Composer 
